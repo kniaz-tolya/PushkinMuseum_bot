@@ -45,14 +45,15 @@ def dateToTimestamp(date, date_format="%Y-%m-%d"):
 intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
 
 
-def process(list, category):
+def process(event_list, category):
+    print(event_list[0])
     return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"],
                               "name": event["name"], "age": event["ageRestriction"],
                               "price": event["price"],
                               # "link": event["saleLink"],
                               "street": event["places"][0]["address"]["street"],
                               "start": event["start"], "end": event["end"]},
-               filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
+               filter(lambda item: item["category"]["sysName"] == intentsToApi[category], event_list))
 
 
 # "saleLink": event["saleLink"]
