@@ -79,7 +79,7 @@ def build_message_and_send():
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
     except IndexError:
-        bot.send_message(user_id, "Больше нет(")
+        bot.send_message(user_id, "Больше нет(", reply_markup=utils.delete_markup())
 
 
 def process_command(response):
