@@ -76,7 +76,8 @@ def build_message_and_send():
         age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
 
         user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
-        'shortDescription'] + "\n" + is_free + " " + price + "\n" + age + "\n" + parsed_list[last_post_position]["link"] + "\n" + parsed_list[last_post_position]["street"]
+            'shortDescription'] + "\n" + is_free + " " + price + "\n" + age + "\n" + parsed_list[last_post_position][
+                           "link"] + "\n" + parsed_list[last_post_position]["street"]
 
         bot.send_message(user_id, user_message, parse_mode="Markdown",
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
