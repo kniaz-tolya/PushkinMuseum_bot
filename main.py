@@ -19,6 +19,10 @@ PORT = os.environ.get('PORT', 8443)
 
 server = Flask(__name__)
 
+last_post_position = 0
+user_id = 0
+parsed_list = list([])
+
 
 @bot.message_handler(commands=["start"])
 def handle_start(message):
@@ -31,6 +35,14 @@ def handle_start(message):
 @bot.message_handler(commands=["links"])
 def handle_links(message):
     send_links(message.from_user.id)
+
+
+@bot.message_handler(content_types=["text"])
+def handel_messages(message):
+    if message.text == "Ещё":
+        global last_post_position
+        last_post_position += 1
+        build_message_and_send()
 
 
 def dateToTimestamp(date, date_format="%Y-%m-%d"):
@@ -49,16 +61,22 @@ def process(list, category):
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
 
 
-def parse_request(date, intent_name, user_id):
+def parse_request(date, intent_name, uid):
     response = urllib2.urlopen(config.museum_url.format(dateToTimestamp(date))).read().decode('utf8')
     data1 = json.loads(response)
 
+    global user_id
+    user_id = uid
+    global parsed_list
     parsed_list = list(process(data1['events'], intent_name))
-    isFree = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
 
-    user_message = parsed_list[0]['shortDescription'] + "\n" + isFree
 
-    bot.send_message(user_id, user_message, reply_markup=utils.delete_markup())
+def build_message_and_send():
+    is_free = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
+
+    user_message = parsed_list[last_post_position]['shortDescription'] + "\n" + is_free
+
+    bot.send_message(user_id, user_message, reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
 
 def process_command(response):
