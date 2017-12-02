@@ -16,8 +16,8 @@ def handle_start(message):
 
 @bot.message_handler(content_types=["text"])
 def handle_intent(message):
-    # bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
-    process_command(message)
+    bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
+    # process_command(message)
 
 
 def process_command(message):
