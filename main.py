@@ -33,10 +33,11 @@ def handle_links(message):
     send_links(message.from_user.id)
 
 
-@bot.message_handler(content_types=["text"])
-def handle_intent(message):
-    bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
-    # process_command(message)
+def parse_request(date, intent_name, user_id):
+    response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
+    data1 = json.loads(response)
+    user_message = data1['events'][0]['category']['name'] + "Ваш запрос"
+    bot.send_message(user_id, user_message, reply_markup=utils.delete_markup())
 
 
 def process_command(response):
@@ -52,10 +53,7 @@ def process_command(response):
     elif intent_name == "links":
         send_links(user_id)
     elif intent_name == "expositions":
-        response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
-        data1 = json.loads(response)
-        user_message = data1['events'][0]['category']['name'] + "Ваш запрос"
-        bot.send_message(user_id, user_message, reply_markup=utils.delete_markup())
+        parse_request(date, intent_name)
     else:
         bot.send_message(user_id, ":)", reply_markup=utils.delete_markup())
 
