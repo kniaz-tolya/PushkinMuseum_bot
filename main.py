@@ -8,6 +8,9 @@ from flask import Flask, request
 import config
 import utils
 
+import time
+import datetime
+
 bot = telebot.TeleBot(config.token)
 bot.stop_polling()
 
@@ -101,3 +104,7 @@ bot.set_webhook(url=config.heroku_webhook)
 
 # bot.polling(none_stop=True)
 server.run(host=HOST, port=PORT)
+
+
+def dateToTimestamp(date, date_format="%Y-%m-%d"):
+    return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
