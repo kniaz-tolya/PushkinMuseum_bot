@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 
 import telebot
@@ -19,26 +20,31 @@ server = Flask(__name__)
 @bot.message_handler(commands=["start"])
 def handle_start(message):
     # bot.register_next_step_handler(message, auth.handle_enter_profile)
-    bot.send_message(message.from_user.id, "Привет! Тебя приветсвует бот-помощник Пушкинского Музея\n")
+    bot.send_message(message.from_user.id, config.welcome_message)
     bot.send_message(message.from_user.id, "Что бы ты хотел узнать?",
-                     reply_markup=utils.generate_markup_keyboard(["События сегодня", "Ссылки на ресурсы"]))
+                     reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
 
 
 @bot.message_handler(content_types=["text"])
 def handle_intent(message):
-    # bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
-    process_command(message)
+    bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
+    # process_command(message)
 
 
-def process_command(message):
-    if "сегодня" in message.text:
-        bot.send_message(message.from_user.id, message.text)
+def process_command(response):
+    data = json.loads(response)
+    print(data)
+
+    intent_name = data['result']['metadata']['intentName']
+    user_id = data['originalRequest']['data']['message']['chat']['id']
+    if intent_name == "events":
+        bot.send_message(user_id, "Что бы ты хотел узнать?",
+                         reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
 
 
 @server.route('/bot', methods=['POST'])
 def post_message():
     req = request.stream.read().decode("utf-8")
-    print(req)
     bot.process_new_updates([telebot.types.Update.de_json(req)])
     return '/bot', 200
 
@@ -47,6 +53,7 @@ def post_message():
 def dialog_message():
     req = request.stream.read().decode("utf-8")
     print(req)
+    process_command(req)
     return '/dialog', 200
 
 
