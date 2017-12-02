@@ -43,7 +43,7 @@ def process_command(response):
     intent_name = data['result']['metadata']['intentName']
     user_id = data['originalRequest']['data']['message']['chat']['id']
     if intent_name == "events":
-        bot.send_message(user_id, "Что бы ты хотел узнать?",
+        bot.send_message(user_id, "Что вы хотите посетить?",
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
     elif intent_name == "links":
         send_links(user_id)
