@@ -43,12 +43,20 @@ def get_message():
     return '/bot', 200
 
 
+@server.route('/bot', methods=['GET'])
+def get_message():
+    req = request.stream.read().decode("utf-8")
+    print(req)
+    return '/bot', 200
+
+
 @server.route('/')
 def webhook_handler():
     bot.remove_webhook()
     bot.set_webhook(url=config.heroku_webhook)
     status_msg = "i'm live. listening on %s:%s" % (HOST, PORT)
     return status_msg, 200
+
 
 # bot.remove_webhook()
 # bot.polling(none_stop=True)
