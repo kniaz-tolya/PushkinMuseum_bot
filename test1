@@ -1,0 +1,2 @@
+date = "https://all.culture.ru/api/2.2/events?status=accepted&start={}&locales=2579%2C2617%2C2618%2C2619%2C2620" \
+             "%2C2621%2C2622%2C2623%2C2624%2C2625%2C2626%2C2627%2C2739&organizations=607 ".format ("2017-12-03")

@@ -46,7 +46,7 @@ def process(list, category):
 
 
 def parse_request(date, intent_name, user_id):
-    response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
+    response = urllib2.urlopen(config.museum_url.format(dateToTimestamp(date))).read().decode('utf8')
     data1 = json.loads(response)
 
     parsed_list = list(process(data1['event'], intent_name))
