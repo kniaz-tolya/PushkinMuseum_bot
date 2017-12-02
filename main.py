@@ -36,8 +36,8 @@ def process_command(message):
 
 
 @server.route('/bot', methods=['POST'])
-def get_message(message):
-    print(message)
+def get_message():
+    print(request.stream.read().decode("utf-8"))
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return '/bot', 200
 
