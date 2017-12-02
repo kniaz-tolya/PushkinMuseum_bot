@@ -25,10 +25,10 @@ def handle_start(message):
                      reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
 
 
-@bot.message_handler(content_types=["text"])
-def handle_intent(message):
-    bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
-    # process_command(message)
+# @bot.message_handler(content_types=["text"])
+# def handle_intent(message):
+#     bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
+#     # process_command(message)
 
 
 def process_command(response):
@@ -40,6 +40,8 @@ def process_command(response):
     if intent_name == "events":
         bot.send_message(user_id, "Что бы ты хотел узнать?",
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
+    else:
+        bot.send_message(user_id, "", reply_markup=utils.delete_markup())
 
 
 @server.route('/bot', methods=['POST'])
