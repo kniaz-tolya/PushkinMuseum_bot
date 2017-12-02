@@ -108,3 +108,9 @@ server.run(host=HOST, port=PORT)
 
 def dateToTimestamp(date, date_format="%Y-%m-%d"):
     return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
+
+intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
+
+def proccess(list, category):
+    return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"]},
+               filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
