@@ -49,7 +49,7 @@ def parse_request(date, intent_name, user_id):
     response = urllib2.urlopen(config.museum_url.format(dateToTimestamp(date))).read().decode('utf8')
     data1 = json.loads(response)
 
-    parsed_list = list(process(data1['event'], intent_name))
+    parsed_list = list(process(data1['events'], intent_name))
     isFree = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
 
     user_message = parsed_list[0]['shortDescription'] + "\n" + isFree
