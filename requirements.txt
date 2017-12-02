@@ -1,0 +1,9 @@
+telebot==0.0.3
+jsonschema==2.4.0
+notebook==4.1.0
+pep8==1.7.0
+pyTelegramBotAPI==3.2.1
+requests==2.13.0
+six==1.10.0
+html2text==2016.9.19
+flask==0.12.2
