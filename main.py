@@ -47,8 +47,7 @@ def post_message():
 def dialog_message():
     req = request.stream.read().decode("utf-8")
     print(req)
-    bot.process_new_updates([telebot.types.Update.de_json(req)])
-    return '/bot', 200
+    return '/dialog', 200
 
 
 @server.route('/bot', methods=['GET'])
