@@ -25,6 +25,11 @@ def handle_start(message):
                      reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
 
 
+@bot.message_handler(commands=["links"])
+def handle_links(message):
+    send_links(message.from_user.id)
+
+
 # @bot.message_handler(content_types=["text"])
 # def handle_intent(message):
 #     bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
@@ -40,8 +45,19 @@ def process_command(response):
     if intent_name == "events":
         bot.send_message(user_id, "Что бы ты хотел узнать?",
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
+    elif intent_name == "links":
+        send_links(user_id)
     else:
-        bot.send_message(user_id, "например", reply_markup=utils.delete_markup())
+        bot.send_message(user_id, ":)", reply_markup=utils.delete_markup())
+
+
+def send_links(user_id):
+    bot.send_message(user_id, "[Новости](http://www.arts-museum.ru/museum/news/index.php)", parse_mode="Markdown")
+    bot.send_message(user_id, "[Контакты](http://www.arts-museum.ru/museum/contacts/index.php)",
+                     parse_mode="Markdown")
+    bot.send_message(user_id, "[Билеты](https://tickets.arts-museum.ru/ru/)", parse_mode="Markdown")
+    bot.send_message(user_id, "[Режим работы](http://www.arts-museum.ru/visitors/contact/index.php)",
+                     parse_mode="Markdown")
 
 
 @server.route('/bot', methods=['POST'])
