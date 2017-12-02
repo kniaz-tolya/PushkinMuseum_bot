@@ -70,14 +70,15 @@ def parse_request(date, intent_name, uid):
     user_id = uid
     global parsed_list
     parsed_list = list(process(data1['events'], intent_name))
+    build_message_and_send()
 
 
 def build_message_and_send():
     is_free = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
+    user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
+        'shortDescription'] + "\n" + is_free
 
-    user_message = parsed_list[last_post_position]['shortDescription'] + "\n" + is_free
-
-    bot.send_message(user_id, user_message, reply_markup=utils.generate_markup_keyboard(["Ещё"]))
+    bot.send_message(user_id, user_message, parse_mode="Markdown", reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
 
 def process_command(response):
