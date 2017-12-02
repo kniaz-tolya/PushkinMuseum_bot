@@ -29,7 +29,8 @@ def handle_start(message):
     # bot.register_next_step_handler(message, auth.handle_enter_profile)
     bot.send_message(message.from_user.id, config.welcome_message)
     bot.send_message(message.from_user.id, "Что бы ты хотел узнать?",
-                     reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
+                     reply_markup=utils.generate_markup_keyboard(
+                         ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
 
 
 @bot.message_handler(commands=["links"])
@@ -100,7 +101,8 @@ def process_command(response):
         date = data['result']['parameters']['date']
         if intent_name == "events":
             bot.send_message(user_id, "Что вы хотите посетить?",
-                             reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
+                             reply_markup=utils.generate_markup_keyboard(
+                                 ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
         elif intent_name == "links":
             send_links(user_id)
 
