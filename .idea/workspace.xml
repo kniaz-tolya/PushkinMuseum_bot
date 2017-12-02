@@ -30,8 +30,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+            <state relative-caret-position="208">
+              <caret line="46" column="11" lean-forward="false" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
               <folding>
                 <element signature="e#24#33#0" expanded="true" />
               </folding>
@@ -344,7 +344,14 @@
       <option name="project" value="LOCAL" />
       <updated>1512217878982</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="add get request">
+      <created>1512218371172</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1512218371172</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -385,7 +392,8 @@
     <MESSAGE value="add logs" />
     <MESSAGE value="disable logs" />
     <MESSAGE value="фвв дщпы" />
-    <option name="LAST_COMMIT_MESSAGE" value="фвв дщпы" />
+    <MESSAGE value="add get request" />
+    <option name="LAST_COMMIT_MESSAGE" value="add get request" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -442,8 +450,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state relative-caret-position="208">
+          <caret line="46" column="11" lean-forward="false" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
