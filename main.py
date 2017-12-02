@@ -82,12 +82,12 @@ def build_message_and_send():
 
         age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
 
-        period = "С " + timestampToDate(parsed_list[last_post_position]["start"]) + " по " + timestampToDate(parsed_list[last_post_position]["end"])
+        #period = "С " + timestampToDate(parsed_list[last_post_position]["start"]) + " по " + timestampToDate(parsed_list[last_post_position]["end"])
         user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n\n" + parsed_list[last_post_position][
             'shortDescription'] + "\n\n" + is_free + " " + price + "\n\n" + age + "\n\n" + \
                        parsed_list[last_post_position][
                            "street"] \
-        + "\n\n" + period
+        #+ "\n\n" + period
             # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
 
         bot.send_message(user_id, user_message, parse_mode="Markdown",
