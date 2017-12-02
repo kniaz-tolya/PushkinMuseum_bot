@@ -53,7 +53,7 @@ def process_command(response):
     elif intent_name == "links":
         send_links(user_id)
     elif intent_name == "expositions":
-        parse_request(date, intent_name)
+        parse_request(date, intent_name, user_id)
     else:
         bot.send_message(user_id, ":)", reply_markup=utils.delete_markup())
 
