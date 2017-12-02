@@ -44,7 +44,7 @@ def process(list, category):
     return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"],
                               "name": event["name"], "age": event["ageRestriction"],
                               "price": event["price"], "saleLink": event["saleLink"],
-                              "street": event["places"]["address"]["street"],
+                              "street": event["places"][0]["address"]["street"],
                               "start": event["start"], "end": event["end"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
 
