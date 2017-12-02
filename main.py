@@ -100,6 +100,7 @@ def process_command(response):
     elif intent_name == "links":
         send_links(user_id)
     else:
+        last_post_position = 0
         date = data['result']['parameters']['date']
         if intent_name == "events":
             bot.send_message(user_id, "Что вы хотите посетить?",
