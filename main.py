@@ -37,14 +37,6 @@ def handle_links(message):
     send_links(message.from_user.id)
 
 
-@bot.message_handler(content_types=["text"])
-def handel_messages(message):
-    if message.text == "Ещё":
-        global last_post_position
-        last_post_position += 1
-        build_message_and_send()
-
-
 def dateToTimestamp(date, date_format="%Y-%m-%d"):
     return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
 
@@ -60,7 +52,8 @@ def process(list, category):
                               "start": event["start"], "end": event["end"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
 
-#"saleLink": event["saleLink"]
+
+# "saleLink": event["saleLink"]
 
 def parse_request(date, intent_name, uid):
     response = urllib2.urlopen(config.museum_url.format(dateToTimestamp(date))).read().decode('utf8')
@@ -74,9 +67,12 @@ def parse_request(date, intent_name, uid):
 
 
 def build_message_and_send():
-    is_free = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
+    is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
+
+    price = parsed_list[last_post_position]['price'] + "руб." if is_free == "Посещение платное" else "\n"
+
     user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
-        'shortDescription'] + "\n" + is_free
+        'shortDescription'] + "\n" + is_free + " " + price
 
     bot.send_message(user_id, user_message, parse_mode="Markdown", reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
@@ -93,6 +89,10 @@ def process_command(response):
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
     elif intent_name == "links":
         send_links(user_id)
+    elif intent_name == "more":
+        global last_post_position
+        last_post_position += 1
+        build_message_and_send()
     else:
         parse_request(date, intent_name, user_id)
 
