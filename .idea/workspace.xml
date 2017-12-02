@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62d37aaf-b673-42f1-bbd4-21149cdfbc03" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utils.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
@@ -13,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/PushkinMuseum_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1512211556704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PushkinMuseum_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1512212561527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf>
@@ -30,11 +31,21 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="96">
-              <caret line="40" column="7" lean-forward="false" selection-start-line="40" selection-start-column="7" selection-end-line="40" selection-end-column="7" />
+            <state relative-caret-position="197">
+              <caret line="50" column="20" lean-forward="false" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
               <folding>
                 <element signature="e#24#33#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -49,6 +60,7 @@
       <list>
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -277,7 +289,14 @@
       <option name="project" value="LOCAL" />
       <updated>1512211570680</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="setup">
+      <created>1512211748226</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1512211748226</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -360,10 +379,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="40" column="7" lean-forward="false" selection-start-line="40" selection-start-column="7" selection-end-line="40" selection-end-column="7" />
+        <state relative-caret-position="197">
+          <caret line="50" column="20" lean-forward="false" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
