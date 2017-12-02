@@ -49,7 +49,7 @@ def process(list, category):
     return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"],
                               "name": event["name"], "age": event["ageRestriction"],
                               "price": event["price"],
-                              #"link": event["saleLink"],
+                              # "link": event["saleLink"],
                               "street": event["places"][0]["address"]["street"],
                               "start": event["start"], "end": event["end"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
@@ -77,7 +77,8 @@ def build_message_and_send():
         age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
 
         user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
-            'shortDescription'] + "\n" + is_free + " " + price + "\n" + age + "\n" + parsed_list[last_post_position]["street"]
+            'shortDescription'] + "\n" + is_free + " " + price + "\n" + age + "\n" + parsed_list[last_post_position][
+                           "street"]
 
         bot.send_message(user_id, user_message, parse_mode="Markdown",
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
@@ -90,21 +91,20 @@ def process_command(response):
     data = json.loads(response)
     print(data)
     intent_name = data['result']['metadata']['intentName']
+    user_id = data['originalRequest']['data']['message']['chat']['id']
 
     if intent_name == "more":
         global last_post_position
         last_post_position += 1
         build_message_and_send()
+    elif intent_name == "links":
+        send_links(user_id)
     else:
-        user_id = data['originalRequest']['data']['message']['chat']['id']
         date = data['result']['parameters']['date']
         if intent_name == "events":
             bot.send_message(user_id, "Что вы хотите посетить?",
                              reply_markup=utils.generate_markup_keyboard(
                                  ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
-        elif intent_name == "links":
-            send_links(user_id)
-
         else:
             parse_request(date, intent_name, user_id)
 
