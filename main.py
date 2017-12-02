@@ -2,7 +2,7 @@
 import os
 
 import telebot
-from flask import Flask
+from flask import Flask, request
 
 import config
 
@@ -32,7 +32,7 @@ def process_command(message):
 
 
 @server.route('/bot', methods=['POST'])
-def getMessage():
+def get_message():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return '/bot', 200
 
