@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 import os
+import time
+import urllib.request as urllib2
 
 import telebot
 from flask import Flask, request
 
 import config
 import utils
-
-import time
-import datetime
 
 bot = telebot.TeleBot(config.token)
 bot.stop_polling()
@@ -33,10 +33,10 @@ def handle_links(message):
     send_links(message.from_user.id)
 
 
-# @bot.message_handler(content_types=["text"])
-# def handle_intent(message):
-#     bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
-#     # process_command(message)
+@bot.message_handler(content_types=["text"])
+def handle_intent(message):
+    bot.send_message(message.from_user.id, "Ага, " + message.text + ", принял, думаю")
+    # process_command(message)
 
 
 def process_command(response):
@@ -45,11 +45,17 @@ def process_command(response):
 
     intent_name = data['result']['metadata']['intentName']
     user_id = data['originalRequest']['data']['message']['chat']['id']
+    date = data['result']['parameters']['date']
     if intent_name == "events":
         bot.send_message(user_id, "Что вы хотите посетить?",
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
     elif intent_name == "links":
         send_links(user_id)
+    elif intent_name == "expositions":
+        response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
+        data1 = json.loads(response)
+        user_message = data1['events'][0]['category']['name'] + "Ваш запрос"
+        bot.send_message(user_id, user_message, reply_markup=utils.delete_markup())
     else:
         bot.send_message(user_id, ":)", reply_markup=utils.delete_markup())
 
