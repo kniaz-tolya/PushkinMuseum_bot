@@ -41,7 +41,7 @@ def process_command(response):
         bot.send_message(user_id, "Что бы ты хотел узнать?",
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
     else:
-        bot.send_message(user_id, "", reply_markup=utils.delete_markup())
+        bot.send_message(user_id, "например", reply_markup=utils.delete_markup())
 
 
 @server.route('/bot', methods=['POST'])
