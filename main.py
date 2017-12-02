@@ -68,16 +68,21 @@ def parse_request(date, intent_name, uid):
 
 
 def build_message_and_send():
-    is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
+    try:
+        is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
 
-    price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
+        price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
 
-    age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
+        age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
 
-    user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
+        user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
         'shortDescription'] + "\n" + is_free + " " + price + "\n" + age + "\n" + parsed_list[last_post_position]["link"] + "\n" + parsed_list[last_post_position]["street"]
 
-    bot.send_message(user_id, user_message, parse_mode="Markdown", reply_markup=utils.generate_markup_keyboard(["Ещё"]))
+        bot.send_message(user_id, user_message, parse_mode="Markdown",
+                         reply_markup=utils.generate_markup_keyboard(["Ещё"]))
+
+    except IndexError:
+        bot.send_message(user_id, "Больше нет(", reply_markup=utils.delete_markup())
 
 
 def process_command(response):
