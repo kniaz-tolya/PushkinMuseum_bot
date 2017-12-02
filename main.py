@@ -33,6 +33,18 @@ def handle_links(message):
     send_links(message.from_user.id)
 
 
+def dateToTimestamp(date, date_format="%Y-%m-%d"):
+    return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
+
+
+intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
+
+
+def process(list, category):
+    return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"]},
+               filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
+
+
 def parse_request(date, intent_name, user_id):
     response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
     data1 = json.loads(response)
@@ -111,15 +123,3 @@ bot.set_webhook(url=config.heroku_webhook)
 
 # bot.polling(none_stop=True)
 server.run(host=HOST, port=PORT)
-
-
-def dateToTimestamp(date, date_format="%Y-%m-%d"):
-    return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
-
-
-intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
-
-
-def process(list, category):
-    return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"]},
-               filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
