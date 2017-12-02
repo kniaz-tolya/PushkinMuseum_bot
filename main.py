@@ -36,7 +36,12 @@ def handle_links(message):
 def parse_request(date, intent_name, user_id):
     response = urllib2.urlopen(config.museum_url % dateToTimestamp(date)).read().decode('utf8')
     data1 = json.loads(response)
-    user_message = data1['events'][0]['category']['name'] + "Ваш запрос"
+
+    parsed_list = list(process(data1['event'], intent_name))
+    isFree = "Посещение бесплатное" if parsed_list[0]['isFree'] == "true" else "Посещение платное"
+
+    user_message = parsed_list[0]['shortDescription'] + "\n" + isFree
+
     bot.send_message(user_id, user_message, reply_markup=utils.delete_markup())
 
 
@@ -52,10 +57,8 @@ def process_command(response):
                          reply_markup=utils.generate_markup_keyboard(["Выставки", "Лекции", "Концерты"]))
     elif intent_name == "links":
         send_links(user_id)
-    elif intent_name == "expositions":
-        parse_request(date, intent_name, user_id)
     else:
-        bot.send_message(user_id, ":)", reply_markup=utils.delete_markup())
+        parse_request(date, intent_name, user_id)
 
 
 def send_links(user_id):
@@ -113,8 +116,10 @@ server.run(host=HOST, port=PORT)
 def dateToTimestamp(date, date_format="%Y-%m-%d"):
     return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
 
+
 intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
 
-def proccess(list, category):
+
+def process(list, category):
     return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], list))
