@@ -69,7 +69,7 @@ def parse_request(date, intent_name, uid):
 def build_message_and_send():
     is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
 
-    price = parsed_list[last_post_position]['price'] + "руб." if is_free == "Посещение платное" else "\n"
+    price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
 
     user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n" + parsed_list[last_post_position][
         'shortDescription'] + "\n" + is_free + " " + price
