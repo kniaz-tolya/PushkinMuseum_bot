@@ -133,6 +133,7 @@ def send_links(user_id):
 def post_message():
     req = request.stream.read().decode("utf-8")
     bot.process_new_updates([telebot.types.Update.de_json(req)])
+    print(req)
     return '/bot', 200
 
 
