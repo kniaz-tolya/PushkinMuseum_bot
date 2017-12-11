@@ -66,11 +66,22 @@ def parse_request(date, intent_name, uid):
     parsed_list = list(process(data1['events'], intent_name))
 
     sessionContext.__setitem__(uid, {'data': parsed_list, 'index': 0})
+    print("data --->")
+    print(parsed_list)
+    print("data <---")
+
     build_message_and_send(uid, parsed_list, 0)
 
 
 def build_message_and_send(uid, parsed_list, last_post_position):
     try:
+        print("data --->")
+        print(parsed_list)
+        print("data <---")
+        print("last_post_position --->")
+        print(last_post_position)
+        print("last_post_position <---")
+
         is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
 
         price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
