@@ -58,7 +58,7 @@ def parse_request(date, intent_name, uid):
 
     sessionContext[uid] = {'data': parsed_list, 'index': 0}
 
-    build_message_and_send(uid, sessionContext[uid])
+    build_message_and_send(uid)
 
 
 def build_message_and_send(uid):
@@ -117,7 +117,7 @@ def process_more_case(user_id, data, intent_name):
         parsed_list = sessionContext[user_id]
         last_post_position = int(sessionContext[user_id]['index']) + 1
         if last_post_position < len(parsed_list):
-            build_message_and_send(user_id, parsed_list, last_post_position)
+            build_message_and_send(user_id)
         else:
             else_case(data, intent_name, user_id)
     else:
