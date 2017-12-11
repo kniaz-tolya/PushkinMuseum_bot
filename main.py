@@ -42,6 +42,11 @@ def dateToTimestamp(date, date_format="%Y-%m-%d"):
     return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
 
 
+def timestampToDate(timestamp, date_format="%d/%m/%Y"):
+    return datetime.datetime.fromtimestamp(
+        int(timestamp)).strftime(date_format)
+
+
 intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
 
 
@@ -77,11 +82,13 @@ def build_message_and_send():
 
         age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
 
+        #period = "С " + timestampToDate(parsed_list[last_post_position]["start"]) + " по " + timestampToDate(parsed_list[last_post_position]["end"])
         user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n\n" + parsed_list[last_post_position][
             'shortDescription'] + "\n\n" + is_free + " " + price + "\n\n" + age + "\n\n" + \
                        parsed_list[last_post_position][
                            "street"] \
-                       # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
+        #+ "\n\n" + period
+            # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
 
         bot.send_message(user_id, user_message, parse_mode="Markdown",
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
@@ -126,6 +133,7 @@ def send_links(user_id):
 def post_message():
     req = request.stream.read().decode("utf-8")
     bot.process_new_updates([telebot.types.Update.de_json(req)])
+    print(req)
     return '/bot', 200
 
 
