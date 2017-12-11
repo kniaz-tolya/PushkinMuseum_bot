@@ -19,9 +19,7 @@ PORT = os.environ.get('PORT', 8443)
 
 server = Flask(__name__)
 
-last_post_position = 0
-user_id = 0
-parsed_list = list([])
+sessionContext = {'userId': {'data': [], 'index': 0}}
 
 
 @bot.message_handler(commands=["start"])
@@ -52,29 +50,29 @@ intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "ko
 
 def process(event_list, category):
     print(event_list[0])
-    return map(lambda event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"],
-                              "name": event["name"], "age": event["ageRestriction"],
-                              "price": event["price"],
-                              # "saleLink": event["saleLink"],
-                              "street": event["places"][0]["address"]["street"],
-                              "start": event["start"], "end": event["end"]},
+    return map(lambda i, event: {"shortDescription": event["shortDescription"], "isFree": event["isFree"],
+                                 "name": event["name"], "age": event["ageRestriction"],
+                                 "price": event["price"],
+                                 # "saleLink": event["saleLink"],
+                                 "street": event["places"][0]["address"]["street"],
+                                 "last_position": i,
+                                 "start": event["start"], "end": event["end"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], event_list))
 
-
-# "saleLink": event["saleLink"]
 
 def parse_request(date, intent_name, uid):
     response = urllib2.urlopen(config.museum_url.format(dateToTimestamp(date))).read().decode('utf8')
     data1 = json.loads(response)
 
-    global user_id
-    user_id = uid
-    global parsed_list
     parsed_list = list(process(data1['events'], intent_name))
-    build_message_and_send()
+
+    sessionContext[uid]['data'] = parsed_list
+    sessionContext[uid]['index'] = 0
+
+    build_message_and_send(uid, parsed_list, 0)
 
 
-def build_message_and_send():
+def build_message_and_send(uid, parsed_list, last_post_position):
     try:
         is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
 
@@ -90,11 +88,13 @@ def build_message_and_send():
             # + "\n\n" + period
         # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
 
-        bot.send_message(user_id, user_message, parse_mode="Markdown",
+        bot.send_message(uid, user_message, parse_mode="Markdown",
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
     except IndexError:
-        bot.send_message(user_id, "Больше нет(", reply_markup=utils.delete_markup())
+        parsed_list['last_position'] = "1000000"
+        sessionContext[uid] = parsed_list
+        bot.send_message(uid, "Больше нет(", reply_markup=utils.delete_markup())
 
 
 def process_command(response):
@@ -104,28 +104,34 @@ def process_command(response):
     user_id = data['originalRequest']['data']['message']['chat']['id']
 
     if intent_name == "more":
-        global last_post_position
-        last_post_position += 1
-        build_message_and_send()
+        parsed_list = sessionContext[user_id]
+        last_post_position = int(sessionContext[user_id]['index']) + 1
+        if last_post_position < len(parsed_list):
+            build_message_and_send(user_id, parsed_list, last_post_position)
+        else:
+            else_case(data, intent_name, user_id)
     elif intent_name == "links":
         send_links(user_id)
     else:
-        last_post_position = 0
-        date = data['result']['parameters']['date']
-        if intent_name == "events":
-            bot.send_message(user_id, "Что вы хотите посетить?",
-                             reply_markup=utils.generate_markup_keyboard(
-                                 ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
-        else:
-            parse_request(date, intent_name, user_id)
+        else_case(data, intent_name, user_id)
 
 
-def send_links(user_id):
-    bot.send_message(user_id, "[Новости](http://www.arts-museum.ru/museum/news/index.php)", parse_mode="Markdown")
-    bot.send_message(user_id, "[Контакты](http://www.arts-museum.ru/museum/contacts/index.php)",
+def else_case(data, intent_name, user_id):
+    date = data['result']['parameters']['date']
+    if intent_name == "events":
+        bot.send_message(user_id, "Что вы хотите посетить?",
+                         reply_markup=utils.generate_markup_keyboard(
+                             ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
+    else:
+        parse_request(date, intent_name, user_id)
+
+
+def send_links(user):
+    bot.send_message(user, "[Новости](http://www.arts-museum.ru/museum/news/index.php)", parse_mode="Markdown")
+    bot.send_message(user, "[Контакты](http://www.arts-museum.ru/museum/contacts/index.php)",
                      parse_mode="Markdown")
-    bot.send_message(user_id, "[Билеты](https://tickets.arts-museum.ru/ru/)", parse_mode="Markdown")
-    bot.send_message(user_id, "[Режим работы](http://www.arts-museum.ru/visitors/contact/index.php)",
+    bot.send_message(user, "[Билеты](https://tickets.arts-museum.ru/ru/)", parse_mode="Markdown")
+    bot.send_message(user, "[Режим работы](http://www.arts-museum.ru/visitors/contact/index.php)",
                      parse_mode="Markdown")
 
 
