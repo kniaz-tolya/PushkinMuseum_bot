@@ -88,7 +88,8 @@ def build_message_and_send(uid, parsed_list, last_post_position):
         bot.send_message(uid, user_message, parse_mode="Markdown",
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
-    except IndexError:
+    except IndexError as e:
+        print(e)
         bot.send_message(uid, "Больше нет(", reply_markup=utils.delete_markup())
 
 
