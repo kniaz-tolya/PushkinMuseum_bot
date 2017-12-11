@@ -66,9 +66,7 @@ def parse_request(date, intent_name, uid):
 
     parsed_list = list(process(data1['events'], intent_name))
 
-    sessionContext[uid]['data'] = parsed_list
-    sessionContext[uid]['index'] = 0
-
+    sessionContext.__setitem__(uid, {'data': parsed_list, 'index': 0})
     build_message_and_send(uid, parsed_list, 0)
 
 
