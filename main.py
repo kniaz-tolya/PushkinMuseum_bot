@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
 import json
 import os
-import time
 import urllib.request as urllib2
 
 import telebot
@@ -10,6 +8,8 @@ from flask import Flask, request
 
 import config
 import utils
+
+from utils import dateToTimestamp, timestampToDate
 
 bot = telebot.TeleBot(config.token)
 bot.stop_polling()
@@ -34,15 +34,6 @@ def handle_start(message):
 @bot.message_handler(commands=["links"])
 def handle_links(message):
     send_links(message.from_user.id)
-
-
-def dateToTimestamp(date, date_format="%Y-%m-%d"):
-    return time.mktime(datetime.datetime.strptime(date, date_format).timetuple())
-
-
-def timestampToDate(timestamp, date_format="%d/%m/%Y"):
-    return datetime.datetime.fromtimestamp(
-        int(timestamp)).strftime(date_format)
 
 
 intentsToApi = {"expositions": "vystavki", "lections": "lekcii", "concerts": "koncerty"}
@@ -146,7 +137,6 @@ def send_links(user):
 def post_message():
     req = request.stream.read().decode("utf-8")
     bot.process_new_updates([telebot.types.Update.de_json(req)])
-    print(req)
     return '/bot', 200
 
 
