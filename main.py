@@ -97,6 +97,7 @@ def process_command(response):
     user_id = data['originalRequest']['data']['message']['chat']['id']
 
     if intent_name == "more":
+        sessionContext[user_id]['index'] = sessionContext[user_id]['index'] + 1
         build_message_and_send(user_id)
     elif intent_name == "links":
         send_links(user_id)
