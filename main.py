@@ -19,7 +19,7 @@ PORT = os.environ.get('PORT', 8443)
 
 server = Flask(__name__)
 
-sessionContext = {'userId': {'data': [], 'index': 0}}
+sessionContext = {}
 
 
 @bot.message_handler(commands=["start"])
@@ -56,43 +56,38 @@ def parse_request(date, intent_name, uid):
 
     parsed_list = list(process(data1['events'], intent_name))
 
-    sessionContext.__setitem__(uid, {'data': parsed_list, 'index': 0})
-    print("data --->")
-    print(parsed_list)
-    print("data <---")
+    sessionContext[uid] = {'data': parsed_list, 'index': 0}
 
-    build_message_and_send(uid, parsed_list, 0)
+    build_message_and_send(uid, sessionContext[uid])
 
 
-def build_message_and_send(uid, parsed_list, last_post_position):
-    try:
-        print("data --->")
-        print(parsed_list)
-        print("data <---")
-        print("last_post_position --->")
-        print(last_post_position)
-        print("last_post_position <---")
+def build_message_and_send(uid):
 
-        is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
+    context = sessionContext[uid]
+    last_post_position = context['index']
+    parsed_list = context['data']
 
-        price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
-
-        age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
-
-        # period = "С " + timestampToDate(parsed_list[last_post_position]["start"]) + " по " + timestampToDate(parsed_list[last_post_position]["end"])
-        user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n\n" + parsed_list[last_post_position][
-            'shortDescription'] + "\n\n" + is_free + " " + price + "\n\n" + age + "\n\n" + \
-                       parsed_list[last_post_position][
-                           "street"] \
-            # + "\n\n" + period
-        # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
-
-        bot.send_message(uid, user_message, parse_mode="Markdown",
-                         reply_markup=utils.generate_markup_keyboard(["Ещё"]))
-
-    except IndexError as e:
-        print(e)
+    if last_post_position >= len(parsed_list):
         bot.send_message(uid, "Больше нет(", reply_markup=utils.delete_markup())
+        return
+
+    is_free = "Посещение бесплатное" if parsed_list[last_post_position]['isFree'] == "true" else "Посещение платное"
+
+    price = str(parsed_list[last_post_position]['price']) + "руб." if is_free == "Посещение платное" else "\n"
+
+    age = "Возрастное ограничение: " + str(parsed_list[last_post_position]["age"]) + "+"
+
+    # period = "С " + timestampToDate(parsed_list[last_post_position]["start"]) + " по " + timestampToDate(parsed_list[last_post_position]["end"])
+
+    user_message = "*" + parsed_list[last_post_position]['name'] + "*" + "\n\n" + parsed_list[last_post_position][
+        'shortDescription'] + "\n\n" + is_free + " " + price + "\n\n" + age + "\n\n" + \
+                   parsed_list[last_post_position][
+                       "street"] \
+        # + "\n\n" + period
+    # + " \n\n" + "Билеты " + parsed_list[last_post_position]['saleLink']
+
+    bot.send_message(uid, user_message, parse_mode="Markdown",
+                     reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
 
 def process_command(response):
@@ -102,12 +97,7 @@ def process_command(response):
     user_id = data['originalRequest']['data']['message']['chat']['id']
 
     if intent_name == "more":
-        parsed_list = sessionContext[user_id]
-        last_post_position = int(sessionContext[user_id]['index']) + 1
-        if last_post_position < len(parsed_list):
-            build_message_and_send(user_id, parsed_list, last_post_position)
-        else:
-            else_case(data, intent_name, user_id)
+        build_message_and_send(user_id)
     elif intent_name == "links":
         send_links(user_id)
     else:
