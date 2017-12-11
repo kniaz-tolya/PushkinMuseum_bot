@@ -55,7 +55,6 @@ def process(event_list, category):
                                  "price": event["price"],
                                  # "saleLink": event["saleLink"],
                                  "street": event["places"][0]["address"]["street"],
-                                 "last_position": i,
                                  "start": event["start"], "end": event["end"]},
                filter(lambda item: item["category"]["sysName"] == intentsToApi[category], event_list))
 
@@ -90,8 +89,6 @@ def build_message_and_send(uid, parsed_list, last_post_position):
                          reply_markup=utils.generate_markup_keyboard(["Ещё"]))
 
     except IndexError:
-        parsed_list['last_position'] = "1000000"
-        sessionContext[uid] = parsed_list
         bot.send_message(uid, "Больше нет(", reply_markup=utils.delete_markup())
 
 
