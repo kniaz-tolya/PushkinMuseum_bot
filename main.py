@@ -66,9 +66,6 @@ def parse_request(date, intent_name, uid):
     parsed_list = list(process(data1['events'], intent_name))
 
     sessionContext.__setitem__(uid, {'data': parsed_list, 'index': 0})
-    print("data --->")
-    print(parsed_list)
-    print("data <---")
 
     build_message_and_send(uid, parsed_list, 0)
 
@@ -111,12 +108,7 @@ def process_command(response):
     user_id = data['originalRequest']['data']['message']['chat']['id']
 
     if intent_name == "more":
-        parsed_list = sessionContext[user_id]
-        last_post_position = int(sessionContext[user_id]['index']) + 1
-        if last_post_position < len(parsed_list):
-            build_message_and_send(user_id, parsed_list, last_post_position)
-        else:
-            else_case(data, intent_name, user_id)
+        process_more_case(data, intent_name, user_id)
     elif intent_name == "links":
         send_links(user_id)
     else:
@@ -126,11 +118,27 @@ def process_command(response):
 def else_case(data, intent_name, user_id):
     date = data['result']['parameters']['date']
     if intent_name == "events":
-        bot.send_message(user_id, "Что вы хотите посетить?",
-                         reply_markup=utils.generate_markup_keyboard(
-                             ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
+        what_you_want_to_visit(user_id, "Что вы хотите посетить?")
     else:
         parse_request(date, intent_name, user_id)
+
+
+def process_more_case(user_id, data, intent_name):
+    if sessionContext.__contains__(user_id):
+        parsed_list = sessionContext[user_id]
+        last_post_position = int(sessionContext[user_id]['index']) + 1
+        if last_post_position < len(parsed_list):
+            build_message_and_send(user_id, parsed_list, last_post_position)
+        else:
+            else_case(data, intent_name, user_id)
+    else:
+        what_you_want_to_visit(user_id, "Сначала выберите, что вы хотите посетить?")
+
+
+def what_you_want_to_visit(user_id, text):
+    bot.send_message(user_id, text,
+                     reply_markup=utils.generate_markup_keyboard(
+                         ["Выставки сегодня", "Лекции сегодня", "Концерты сегодня"]))
 
 
 def send_links(user):
